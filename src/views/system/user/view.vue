@@ -48,21 +48,19 @@
         </el-col>
       </el-row>
       <el-row :gutter="20" class="mb8">
-        <el-col :span="12">
+        <!-- <el-col :span="12">
           <div class="info-item">
             <label class="info-label">岗位：</label>
             <span class="info-value plaintext">{{ postNames || '无岗位' }}</span>
           </div>
-        </el-col>
+        </el-col> -->
         <el-col :span="12">
           <div class="info-item">
             <label class="info-label">用户性别：</label>
             <span class="info-value plaintext">{{ sexLabel }}</span>
           </div>
         </el-col>
-      </el-row>
-      <el-row :gutter="20" class="mb8">
-        <el-col :span="24">
+        <el-col :span="12">
           <div class="info-item full-width">
             <label class="info-label">角色：</label>
             <span class="info-value plaintext">{{ roleNames || '无角色' }}</span>
@@ -125,30 +123,33 @@
   </el-drawer>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { getUser } from '@/api/system/user'
+import type { SysUser } from '@/types/api/system/user'
+import type { SysRole } from '@/types/api/system/role'
+import type { SysPost } from '@/types/api/system/post'
 
-const visible = ref(false)
-const loading = ref(false)
-const info = reactive({})
-const postOptions = ref([])
-const roleOptions = ref([])
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
+const info = reactive<SysUser>({})
+const postOptions = ref<SysPost[]>([])
+const roleOptions = ref<SysRole[]>([])
 
 const { sys_user_sex } = useDict("sys_user_sex")
 
 const sexLabel = computed(() => selectDictLabel(sys_user_sex.value, info.sex) || '-')
 
-const postNames = computed(() => {
+const postNames = computed<string>(() => {
   if (!postOptions.value.length || !info.postIds) return ''
-  return postOptions.value.filter(p => info.postIds?.includes(p.postId)).map(p => p.postName).join('、') || ''
+  return postOptions.value.filter((p: SysPost) => info.postIds?.includes(p.postId)).map((p: SysPost) => p.postName).join('、') || ''
 })
 
-const roleNames = computed(() => {
+const roleNames = computed<string>(() => {
   if (!roleOptions.value.length || !info.roleIds) return ''
-  return roleOptions.value.filter(r => info.roleIds?.includes(r.roleId)).map(r => r.roleName).join('、') || ''
+  return roleOptions.value.filter((r: SysRole) => info.roleIds?.includes(r.roleId)).map((r: SysRole) => r.roleName).join('、') || ''
 })
 
-const open = async (userId) => {
+const open = async (userId: number): Promise<void> => {
   visible.value = true
   loading.value = true
   try {
@@ -165,7 +166,7 @@ const open = async (userId) => {
   }
 }
 
-function handleClose() {
+const handleClose = (): void => {
   visible.value = false
 }
 

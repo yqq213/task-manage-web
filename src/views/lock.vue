@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useRouter } from 'vue-router'
 import useUserStore from '@/store/modules/user'
 import useLockStore from '@/store/modules/lock'
@@ -44,27 +44,27 @@ const router = useRouter()
 const userStore = useUserStore()
 const lockStore = useLockStore()
 
-const password = ref('')
-const loading = ref(false)
-const errorMsg = ref('')
-const isShaking = ref(false)
-const currentTime = ref('')
-const currentDate = ref('')
-const passwordInput = ref(null)
-const particleCanvas = ref(null)
+const password = ref<string>('')
+const loading = ref<boolean>(false)
+const errorMsg = ref<string>('')
+const isShaking = ref<boolean>(false)
+const currentTime = ref<string>('')
+const currentDate = ref<string>('')
+const passwordInput = ref<HTMLInputElement | null>(null)
+const particleCanvas = ref<HTMLCanvasElement | null>(null)
 
-let timer = null
-let animationId = null
-let particles = []
+let timer: any = null
+let animationId: any  = null
+let particles: any = []
 
-const onAvatarError = (e) => {
-  e.target.src = defAva
+const onAvatarError = (e: Event) => {
+  (e.target as HTMLImageElement).src = defAva
 }
 
 const startClock = () => {
   const update = () => {
     const now = new Date()
-    const pad = n => String(n).padStart(2, '0')
+    const pad = (n: number) => String(n).padStart(2, '0')
     currentTime.value = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
     const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
     currentDate.value = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 ${days[now.getDay()]}`
@@ -85,7 +85,7 @@ const handleUnlock = async () => {
     const lockPath = lockStore.lockPath
     lockStore.unlockScreen()
     router.replace(lockPath)
-  } catch (err) {
+  } catch (err: any) {
     const msg = err.message || err.toString()
     showError(msg)
     password.value = ''
@@ -95,7 +95,7 @@ const handleUnlock = async () => {
   }
 }
 
-const showError = (msg) => {
+const showError = (msg: string) => {
   errorMsg.value = msg
   isShaking.value = true
   setTimeout(() => { isShaking.value = false }, 600)
