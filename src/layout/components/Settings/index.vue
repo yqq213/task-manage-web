@@ -139,7 +139,8 @@ const theme = ref<string>(settingsStore.theme)
 const sideTheme = ref<string>(settingsStore.sideTheme)
 const tagsViewPersist = ref(settingsStore.tagsViewPersist)
 const storeSettings = computed(() => settingsStore)
-const predefineColors = ref<string[]>(["#409EFF", "#ff4500", "#ff8c00", "#ffd700", "#90ee90", "#00ced1", "#1e90ff", "#c71585"])
+// 默认主题色置于首位，保留其他颜色供用户选择。
+const predefineColors = ref<string[]>(["#009688", "#409EFF", "#ff4500", "#ff8c00", "#ffd700", "#90ee90", "#00ced1", "#1e90ff", "#c71585"])
 
 /** 是否需要dynamicTitle */
 function dynamicTitleChange(): void {

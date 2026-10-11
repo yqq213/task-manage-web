@@ -33,7 +33,8 @@ const useSettingsStore = defineStore(
   {
     state: (): SettingsState => ({
       title: '',
-      theme: storageSetting.theme || '#409EFF',
+      // 优先使用已保存的个人主题；首次使用或重置配置时采用默认青绿色。
+      theme: storageSetting.theme || '#009688',
       sideTheme: storageSetting.sideTheme || sideTheme,
       showSettings: showSettings,
       navType: storageSetting.navType === undefined ? navType : storageSetting.navType,

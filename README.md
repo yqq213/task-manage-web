@@ -1,125 +1,266 @@
-<p align="center">
-	<img alt="logo" src="https://oscimg.oschina.net/oscnet/up-d3d0a9303e11d522a06cd263f3079027715.png">
-</p>
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYi v3.9.2</h1>
-<h4 align="center">基于SpringBoot+Vue3前后端分离的Java快速开发框架</h4>
-<p align="center">
-	<a href="https://gitee.com/y_project/RuoYi-Vue/stargazers"><img src="https://gitee.com/y_project/RuoYi-Vue/badge/star.svg?theme=dark"></a>
-	<a href="https://gitee.com/y_project/RuoYi-Vue"><img src="https://img.shields.io/badge/RuoYi-v3.9.2-brightgreen.svg"></a>
-	<a href="https://gitee.com/y_project/RuoYi-Vue/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
-</p>
+# 任务管理系统 · 前端
 
-## 平台简介
+基于 RuoYi 前端结构开发的任务管理系统，使用 Vue 3、TypeScript 和 Element Plus，提供数据看板、任务列表、任务详情及系统管理等页面。项目采用前后端分离模式，登录鉴权、菜单、任务数据与统计结果由后端接口提供。
 
-* 本仓库为前端技术栈 [TypeScript](https://www.typescriptlang.org) + [Vue3](https://v3.cn.vuejs.org) + [Element Plus](https://element-plus.org/zh-CN) + [Vite](https://cn.vitejs.dev) 版本。
-* 配套后端代码仓库地址[RuoYi-Vue](https://gitee.com/y_project/RuoYi-Vue) 或 [RuoYi-Vue-fast](https://gitcode.com/yangzongzhuan/RuoYi-Vue-fast) 版本。
-* 阿里云折扣场：[点我进入](http://aly.ruoyi.vip)，腾讯云秒杀场：[点我进入](http://txy.ruoyi.vip)&nbsp;&nbsp;
+## 主要功能
 
-# 版本对比
+- **数据看板**：首页 `/index` 展示任务总量、状态分布、优先级分布和个人完成情况；支持创建日期范围、近 7 天、近 30 天、本月及全部时间筛选。
+- **任务管理**：任务查询、分页、排序、新增、编辑、指派负责人、状态变更、删除、详情及操作记录查看。
+- **系统管理**：用户、角色、菜单、部门、岗位、字典、参数和通知公告等页面，实际可见菜单取决于后端配置和用户权限。
+- **系统监控与工具**：在线用户、日志、定时任务、服务与缓存监控、代码生成、表单构建等页面。
+- **通用能力**：登录、个人中心、锁屏、权限指令、页签缓存、主题设置、文件上传及下载。
 
-RuoYi-Vue 前端项目的三个主要演进版本，方便你直观对比其技术栈差异（并行开发维护）。
+## 本地运行
 
-| 项目名称      | **RuoYi-Vue2** | **RuoYi-Vue3** | **RuoYi-Vue3-TypeScript**   |
-| :---          | :---           | :---           | :---                        |
-| **前端框架**  | Vue 2         | Vue 3          | Vue 3                       |
-| **脚本语言**  | JavaScript    | JavaScript     | TypeScript                  |
-| **构建工具**  | Vue CLI       | Vite           | Vite                        |
-| **UI 组件库** | Element UI    | Element Plus   | Element Plus                |
-| **状态管理**  | Vuex          | Pinia          | Pinia                       |
-| **路由管理**  | Vue Router 3  | Vue Router 4   | Vue Router 4                |
-| **核心特点**  | 1. 技术栈经典稳定<br>2. 社区资料丰富<br>3. 当前维护重心已转移 | 1. 现代前端技术栈<br>2. 开发体验与性能更优<br>3. 官方主推的活跃版本 | 1. 类型加持，减少沟通成本<br>2. 开发时有提示，效率更高<br>3. 多人协作企业级开发项目 |
-| **仓库地址**  | [RuoYi-Vue2](https://gitcode.com/yangzongzhuan/RuoYi-Vue2) | [RuoYi-Vue3](https://gitcode.com/yangzongzhuan/RuoYi-Vue3) | [RuoYi-Vue3-TypeScript](https://gitcode.com/yangzongzhuan/RuoYi-Vue3/tree/typescript) |
+建议使用 Node.js 22 LTS。仓库提供 `pnpm-lock.yaml`，建议使用 pnpm 安装依赖，避免混用包管理器产生新的锁文件。
 
-## 前端运行
+在项目根目录执行：
 
 ```bash
-# 克隆项目
-git clone https://gitcode.com/yangzongzhuan/RuoYi-Vue3.git
-
-# 切换typescript分支
-git checkout typescript
-
-# 进入项目目录
-cd RuoYi-Vue3
-
 # 安装依赖
-yarn --registry=https://registry.npmmirror.com
+pnpm install
 
-# 启动服务
-yarn dev
-
-# 构建测试环境 yarn build:stage
-# 构建生产环境 yarn build:prod
-# 前端访问地址 http://localhost:80
+# 启动开发服务
+pnpm dev
 ```
 
-## 内置功能
+开发服务默认端口为 **80**，启动后自动打开浏览器，通常访问地址为 `http://localhost`。如果端口被占用，以终端实际输出为准；需要修改端口时，在 `vite.config.ts` 的 `server.port` 中调整。
 
-1.  用户管理：用户是系统操作者，该功能主要完成系统用户配置。
-2.  部门管理：配置系统组织机构（公司、部门、小组），树结构展现支持数据权限。
-3.  岗位管理：配置系统用户所属担任职务。
-4.  菜单管理：配置系统菜单，操作权限，按钮权限标识等。
-5.  角色管理：角色菜单权限分配、设置角色按机构进行数据范围权限划分。
-6.  字典管理：对系统中经常使用的一些较为固定的数据进行维护。
-7.  参数管理：对系统动态配置常用参数。
-8.  通知公告：系统通知公告信息发布维护。
-9.  操作日志：系统正常操作日志记录和查询；系统异常信息日志记录和查询。
-10. 登录日志：系统登录日志记录查询包含登录异常。
-11. 在线用户：当前系统中活跃用户状态监控。
-12. 定时任务：在线（添加、修改、删除)任务调度包含执行结果日志。
-13. 代码生成：前后端代码的生成（java、html、xml、sql）支持CRUD下载 。
-14. 系统接口：根据业务代码自动生成相关的api接口文档。
-15. 服务监控：监视当前系统CPU、内存、磁盘、堆栈等相关信息。
-16. 缓存监控：对系统的缓存信息查询，命令统计等。
-17. 在线构建器：拖动表单元素生成相应的HTML代码。
-18. 连接池监视：监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
+后端应运行在 `http://localhost:8080`。后端服务、数据库及 Redis 的启动配置由后端项目维护，本仓库只包含前端。登录使用后端已配置的有效账号。
 
-## 在线体验
+### 常用命令
 
-- admin/admin123  
-- 陆陆续续收到一些打赏，为了更好的体验已用于演示服务器升级。谢谢各位小伙伴。
-
-演示地址：http://vue.ruoyi.vip  
-文档地址：http://doc.ruoyi.vip
-
-## 演示图
-
-<table>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/cd1f90be5f2684f4560c9519c0f2a232ee8.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/1cbcf0e6f257c7d3a063c0e3f2ff989e4b3.jpg"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-8074972883b5ba0622e13246738ebba237a.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-9f88719cdfca9af2e58b352a20e23d43b12.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-39bf2584ec3a529b0d5a3b70d15c9b37646.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-936ec82d1f4872e1bc980927654b6007307.png"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-b2d62ceb95d2dd9b3fbe157bb70d26001e9.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-d67451d308b7a79ad6819723396f7c3d77a.png"/></td>
-    </tr>	 
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/5e8c387724954459291aafd5eb52b456f53.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/644e78da53c2e92a95dfda4f76e6d117c4b.jpg"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-8370a0d02977eebf6dbf854c8450293c937.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-49003ed83f60f633e7153609a53a2b644f7.png"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-d4fe726319ece268d4746602c39cffc0621.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-c195234bbcd30be6927f037a6755e6ab69c.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/b6115bc8c31de52951982e509930b20684a.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-5e4daac0bb59612c5038448acbcef235e3a.png"/></td>
-    </tr>
-</table>
+| 命令 | 说明 |
+| --- | --- |
+| `pnpm dev` | 启动开发服务 |
+| `pnpm build:prod` | 使用生产环境配置构建 |
+| `pnpm build:stage` | 使用 staging 环境配置构建 |
+| `pnpm preview` | 本地预览已生成的构建产物 |
+| `pnpm test:unit` | 使用 Jest 单次运行单元测试 |
+| `pnpm test:unit:watch` | 监听变更，重跑相关单元测试 |
+| `pnpm test:unit:coverage` | 运行单元测试并生成覆盖率报告 |
 
 
-## 任务前后端分离交流群
+## 环境配置与接口代理
 
-QQ群： [![加入QQ群](https://img.shields.io/badge/已满-937441-blue.svg)](https://jq.qq.com/?_wv=1027&k=5bVB1og) [![加入QQ群](https://img.shields.io/badge/已满-887144332-blue.svg)](https://jq.qq.com/?_wv=1027&k=5eiA4DH) [![加入QQ群](https://img.shields.io/badge/已满-180251782-blue.svg)](https://jq.qq.com/?_wv=1027&k=5AxMKlC) [![加入QQ群](https://img.shields.io/badge/已满-104180207-blue.svg)](https://jq.qq.com/?_wv=1027&k=51G72yr) [![加入QQ群](https://img.shields.io/badge/已满-186866453-blue.svg)](https://jq.qq.com/?_wv=1027&k=VvjN2nvu) [![加入QQ群](https://img.shields.io/badge/已满-201396349-blue.svg)](https://jq.qq.com/?_wv=1027&k=5vYAqA05) [![加入QQ群](https://img.shields.io/badge/已满-101456076-blue.svg)](https://jq.qq.com/?_wv=1027&k=kOIINEb5) [![加入QQ群](https://img.shields.io/badge/已满-101539465-blue.svg)](https://jq.qq.com/?_wv=1027&k=UKtX5jhs) [![加入QQ群](https://img.shields.io/badge/已满-264312783-blue.svg)](https://jq.qq.com/?_wv=1027&k=EI9an8lJ) [![加入QQ群](https://img.shields.io/badge/已满-167385320-blue.svg)](https://jq.qq.com/?_wv=1027&k=SWCtLnMz) [![加入QQ群](https://img.shields.io/badge/已满-104748341-blue.svg)](https://jq.qq.com/?_wv=1027&k=96Dkdq0k) [![加入QQ群](https://img.shields.io/badge/已满-160110482-blue.svg)](https://jq.qq.com/?_wv=1027&k=0fsNiYZt) [![加入QQ群](https://img.shields.io/badge/已满-170801498-blue.svg)](https://jq.qq.com/?_wv=1027&k=7xw4xUG1) [![加入QQ群](https://img.shields.io/badge/已满-108482800-blue.svg)](https://jq.qq.com/?_wv=1027&k=eCx8eyoJ) [![加入QQ群](https://img.shields.io/badge/已满-101046199-blue.svg)](https://jq.qq.com/?_wv=1027&k=SpyH2875) [![加入QQ群](https://img.shields.io/badge/已满-136919097-blue.svg)](https://jq.qq.com/?_wv=1027&k=tKEt51dz) [![加入QQ群](https://img.shields.io/badge/已满-143961921-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=0vBbSb0ztbBgVtn3kJS-Q4HUNYwip89G&authKey=8irq5PhutrZmWIvsUsklBxhj57l%2F1nOZqjzigkXZVoZE451GG4JHPOqW7AW6cf0T&noverify=0&group_code=143961921) [![加入QQ群](https://img.shields.io/badge/已满-174951577-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=ZFAPAbp09S2ltvwrJzp7wGlbopsc0rwi&authKey=HB2cxpxP2yspk%2Bo3WKTBfktRCccVkU26cgi5B16u0KcAYrVu7sBaE7XSEqmMdFQp&noverify=0&group_code=174951577) [![加入QQ群](https://img.shields.io/badge/已满-161281055-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=Fn2aF5IHpwsy8j6VlalNJK6qbwFLFHat&authKey=uyIT%2B97x2AXj3odyXpsSpVaPMC%2Bidw0LxG5MAtEqlrcBcWJUA%2FeS43rsF1Tg7IRJ&noverify=0&group_code=161281055) [![加入QQ群](https://img.shields.io/badge/已满-138988063-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=XIzkm_mV2xTsUtFxo63bmicYoDBA6Ifm&authKey=dDW%2F4qsmw3x9govoZY9w%2FoWAoC4wbHqGal%2BbqLzoS6VBarU8EBptIgPKN%2FviyC8j&noverify=0&group_code=138988063) [![加入QQ群](https://img.shields.io/badge/已满-151450850-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=DkugnCg68PevlycJSKSwjhFqfIgrWWwR&authKey=pR1Pa5lPIeGF%2FFtIk6d%2FGB5qFi0EdvyErtpQXULzo03zbhopBHLWcuqdpwY241R%2F&noverify=0&group_code=151450850) [![加入QQ群](https://img.shields.io/badge/已满-224622315-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=F58bgRa-Dp-rsQJThiJqIYv8t4-lWfXh&authKey=UmUs4CVG5OPA1whvsa4uSespOvyd8%2FAr9olEGaWAfdLmfKQk%2FVBp2YU3u2xXXt76&noverify=0&group_code=224622315) [![加入QQ群](https://img.shields.io/badge/已满-287842588-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=Nxb2EQ5qozWa218Wbs7zgBnjLSNk_tVT&authKey=obBKXj6SBKgrFTJZx0AqQnIYbNOvBB2kmgwWvGhzxR67RoRr84%2Bus5OadzMcdJl5&noverify=0&group_code=287842588) [![加入QQ群](https://img.shields.io/badge/已满-187944233-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=numtK1M_I4eVd2Gvg8qtbuL8JgX42qNh&authKey=giV9XWMaFZTY%2FqPlmWbkB9g3fi0Ev5CwEtT9Tgei0oUlFFCQLDp4ozWRiVIzubIm&noverify=0&group_code=187944233) [![加入QQ群](https://img.shields.io/badge/已满-228578329-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=G6r5KGCaa3pqdbUSXNIgYloyb8e0_L0D&authKey=4w8tF1eGW7%2FedWn%2FHAypQksdrML%2BDHolQSx7094Agm7Luakj9EbfPnSTxSi2T1LQ&noverify=0&group_code=228578329) [![加入QQ群](https://img.shields.io/badge/已满-191164766-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=GsOo-OLz53J8y_9TPoO6XXSGNRTgbFxA&authKey=R7Uy%2Feq%2BZsoKNqHvRKhiXpypW7DAogoWapOawUGHokJSBIBIre2%2FoiAZeZBSLuBc&noverify=0&group_code=191164766) [![加入QQ群](https://img.shields.io/badge/已满-174569686-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=PmYavuzsOthVqfdAPbo4uAeIbu7Ttjgc&authKey=p52l8%2FXa4PS1JcEmS3VccKSwOPJUZ1ZfQ69MEKzbrooNUljRtlKjvsXf04bxNp3G&noverify=0&group_code=174569686) [![加入QQ群](https://img.shields.io/badge/已满-127358632-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=M9y5NjAl44lAL_Vh2crmEehZU_PMU6KS&authKey=ZSDz8hEREWSaPuxQV3gEwqGIaGjfRNnkB4rJjf0IvXhrSUGSGwQFmBA%2Boe8HFxyl&noverify=0&group_code=127358632) [![加入QQ群](https://img.shields.io/badge/113071109-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=UGnoqRcFRxUaX-JAUNrSDbPimKrllp4x&authKey=Bbzf8Bc0XaQhq5c4QOg46Uqngd%2FvtIixrLvCM1EkPf41diqKXKZqXVwAxHTxJ8R1&noverify=0&group_code=113071109) 点击按钮入群。
+| 文件 | 模式 | API 前缀 |
+| --- | --- | --- |
+| `.env.development` | development | `/dev-api` |
+| `.env.production` | production | `/prod-api` |
+| `.env.staging` | staging | `/stage-api` |
+
+主要变量：
+
+| 变量 | 说明 |
+| --- | --- |
+| `VITE_APP_TITLE` | 页面标题，当前为“任务管理系统” |
+| `VITE_APP_ENV` | 项目环境标识 |
+| `VITE_APP_BASE_API` | Axios 请求基础路径 |
+| `VITE_BUILD_COMPRESS` | 构建压缩选项，生产和 staging 当前配置为 `gzip` |
+
+开发环境代理在 `vite.config.ts` 中配置：
+
+```text
+浏览器：GET /dev-api/task/tasks/list
+   ↓ Vite 代理移除 /dev-api 前缀
+后端：GET http://localhost:8080/task/tasks/list
+```
+
+后端地址由该文件中的 `baseUrl` 配置。项目另有 `/v3/api-docs/` 子路径代理，用于后端接口文档相关请求。
+
+生产部署时，将 `dist/` 交给 Nginx 等静态服务，并配置 `/prod-api` 到后端的反向代理；staging 部署对应 `/stage-api`。Vite 开发代理不会随构建产物部署，`pnpm preview` 也不能代替生产反向代理配置。
+
+项目使用 `createWebHistory()`，静态服务器需要支持 SPA 回退：直接访问或刷新业务路由时，应返回 `index.html`，避免出现服务器 404。
+
+## 主要项目目录
+
+```text
+task-manage-web/
+├── public/                      # 不参与模块处理的静态资源
+├── src/
+│   ├── api/                     # 按模块组织的接口函数
+│   │   ├── login.ts             # 登录、验证码、用户信息、退出、解锁
+│   │   ├── menu.ts              # 后端菜单路由接口
+│   │   ├── task.ts              # 任务与统计接口
+│   │   ├── system/              # 系统管理接口
+│   │   ├── monitor/             # 系统监控接口
+│   │   └── tool/                # 开发工具接口
+│   ├── assets/                  # 图片、SVG 图标、全局 SCSS
+│   ├── components/              # 公共组件
+│   ├── directive/               # 权限等自定义指令
+│   ├── layout/                  # 主布局、侧栏、顶部栏、页签、设置面板
+│   ├── plugins/                 # 权限判断、缓存、弹窗、页签等插件
+│   ├── router/index.ts          # 公共路由及本地权限路由
+│   ├── store/modules/           # 用户、权限、布局、锁屏、页签等 Pinia Store
+│   ├── types/                   # 公共类型与 API 类型声明
+│   │   └── api/task.ts          # 任务实体、枚举、查询与统计类型
+│   ├── utils/                   # 请求、鉴权、字典、主题及通用工具
+│   │   ├── request.ts          # Axios 实例、拦截器、通用下载
+│   │   ├── auth.ts             # Token Cookie 操作
+│   │   └── theme.ts            # 主色及深浅色生成
+│   ├── views/                   # 页面
+│   │   ├── index.vue           # 数据看板首页
+│   │   ├── dashboard/          # 看板图表组件
+│   │   ├── task/list/          # 任务列表及表单、详情组件
+│   │   ├── system/             # 系统管理页面
+│   │   ├── monitor/            # 系统监控页面
+│   │   └── tool/               # 开发工具页面
+│   ├── App.vue                 # 根组件、主题初始化
+│   ├── main.ts                 # 应用入口与全局注册
+│   ├── permission.ts           # 路由守卫
+│   └── settings.ts             # 默认布局配置
+├── vite/plugins/               # Vite 插件配置
+├── tests/unit/                 # Jest 单元测试、初始化和 Vue 类型声明
+├── tests/tsconfig.json          # 独立的测试 TypeScript 配置
+├── jest.config.cjs              # Jest 环境、转换器及路径别名
+├── .env.*                      # 环境变量
+├── auto-imports.d.ts            # 自动导入生成的类型声明
+├── package.json                # 依赖及运行脚本
+├── pnpm-lock.yaml              # 依赖锁文件
+├── tsconfig.json               # TypeScript 配置
+└── vite.config.ts              # 别名、代理、构建及插件配置
+```
+
+## 路由与路由守卫
+
+### 路由来源
+
+`src/router/index.ts` 中定义两类本地路由：
+
+- `constantRoutes`：登录、注册、首页、个人中心、锁屏、错误页等固定路由。固定路由并不代表免登录，免登录范围由守卫白名单控制。
+- `dynamicRoutes`：角色分配、字典数据、调度日志、生成配置等需要权限的隐藏业务路由。
+
+普通业务菜单通过 `/getRouters` 从后端获取。`src/store/modules/permission.ts` 将后端返回的组件字符串转换成实际组件：`Layout`、`ParentView`、`InnerLink` 使用特定组件，其余组件通过 `import.meta.glob` 匹配 `src/views/**/*.vue`。
+
+例如，后端菜单组件配置为 `task/list/index` 时，会匹配 `src/views/task/list/index.vue`。因此，新建页面文件后，还需要配置相应后端菜单及角色权限，页面才会出现在授权用户的菜单中。
+
+### 导航流程
+
+守卫定义在 `src/permission.ts`，由 `main.ts` 导入执行：
+
+1. 每次导航启动 NProgress。
+2. 无 Token：允许进入 `/login`、`/register`，其他地址重定向到 `/login?redirect=目标地址`。
+3. 有 Token：访问登录页时回到首页；根据锁屏状态进入 `/lock` 或离开锁屏页。
+4. 用户角色尚未初始化时，调用 `/getInfo` 获取用户、角色和权限，再调用 `/getRouters` 生成菜单路由。
+5. 注册动态路由后，以 `replace` 方式重新导航到目标页面，确保首次访问和刷新时能匹配新注册的路由。
+6. 初始化失败时执行退出并提示错误；导航结束后关闭 NProgress。
+
+本地 `dynamicRoutes` 依据 `permissions` 或 `roles` 筛选。按钮权限可使用项目已有的 `v-hasPermi`、`v-hasRole` 指令。前端权限用于控制入口和展示，接口与记录级权限仍由后端校验。
+
+### 路由配置与缓存
+
+常用配置包括 `hidden`、`alwaysShow`、`name`，以及 `meta.title`、`meta.icon`、`meta.noCache`、`meta.activeMenu`、`meta.affix`。
+
+主内容区 `src/layout/components/AppMain.vue` 使用 `<keep-alive>`，缓存范围由页签 Store 的 `cachedViews` 控制。需要缓存的页面应保持路由 `name` 与组件名称一致。图表等依赖容器尺寸的组件还需处理 `onActivated`、`onDeactivated` 和尺寸变化；相关实现可参考 `src/views/dashboard/DistributionChart.vue`。
+
+## Axios 封装
+
+统一入口为 `src/utils/request.ts`。业务页面通过 `src/api/` 中的接口函数发起请求，复用鉴权、参数处理和错误提示。
+
+### 实例配置
+
+- `baseURL`：读取 `VITE_APP_BASE_API`。
+- 默认超时：**60 秒**，单个接口可通过 `timeout` 覆盖；验证码接口当前为 20 秒。
+- 默认内容类型：`application/json;charset=utf-8`。
+
+### 请求拦截器
+
+1. 从名为 `Admin-Token` 的 Cookie 读取 Token，写入 `Authorization: Bearer <token>`。
+2. GET 请求通过 `tansParams` 将 `params` 转换为 URL 查询参数。
+3. POST、PUT 请求默认执行防重复提交：将最近一次提交的地址、数据与时间记录到 sessionStorage；相同地址与数据在默认 1 秒内重复提交时，拒绝请求并提示“数据正在处理，请勿重复提交”。这属于前端提交保护，不代替后端幂等性控制。
+
+项目约定的请求配置开关放在 `headers` 中：
+
+| 配置 | 含义 |
+| --- | --- |
+| `isToken: false` | 不自动添加 Token，如登录、验证码 |
+| `repeatSubmit: false` | 关闭该请求的防重复提交检查 |
+| `interval: 2000` | 将防重复提交间隔设为 2000 毫秒 |
+
+### 响应拦截器
+
+普通请求成功后返回的是 **后端响应体 `res.data`**，而非 Axios 原始响应对象，也不会自动提取业务 `data` 字段。
+
+| 响应情况 | 处理方式 |
+| --- | --- |
+| 业务码 `200`，或未提供业务码 | 返回响应体 |
+| 业务码 `401` | 防止重复弹出登录过期提示；确认后退出并跳转 |
+| 业务码 `500` | 错误消息提示并拒绝 Promise |
+| 业务码 `601` | 警告消息提示并拒绝 Promise |
+| 其他非成功业务码 | 通知提示并拒绝 Promise |
+| `blob`、`arraybuffer` | 返回二进制响应体 |
+| 网络错误、超时、HTTP 状态错误 | 转换为统一中文提示并拒绝 Promise |
+
+普通业务响应使用 `AjaxResult<T>`，业务数据位于 `response.data`；分页响应使用 `TableDataInfo<T>`，列表及总数直接位于 `response.rows`、`response.total`。类型定义见 `src/types/api/common.ts`。
+
+## 任务模块
+
+页面入口为 `src/views/task/list/index.vue`，表单、详情及枚举文案分别位于 `TaskForm.vue`、`TaskDetail.vue`、`options.ts`。接口集中在 `src/api/task.ts`，类型集中在 `src/types/api/task.ts`。
+
+| 方法 | 接口 | 用途 |
+| --- | --- | --- |
+| GET | `/task/tasks/list` | 分页、筛选与排序 |
+| GET | `/task/tasks/{id}` | 任务详情与操作记录 |
+| GET | `/task/tasks/assignees` | 可选负责人 |
+| GET | `/task/tasks/stats` | 看板统计 |
+| POST | `/task/tasks` | 新增任务 |
+| PUT | `/task/tasks/{id}` | 编辑任务基本信息 |
+| PUT | `/task/tasks/{id}/assignee` | 指派负责人 |
+| PUT | `/task/tasks/{id}/status` | 更新任务状态 |
+| DELETE | `/task/tasks/{id}` | 删除任务 |
+
+## 主题与布局配置
+
+默认主题色为 **`#009688`**，配置入口位于 `src/store/modules/settings.ts`。用户在设置面板保存过主题时，优先使用 localStorage 中 `layout-setting` 的主题值；首次使用或重置配置后采用默认色。
+
+`src/utils/theme.ts` 根据主色生成 Element Plus 的主色及深浅色 CSS 变量，暗色模式使用现有柔化处理。`src/settings.ts` 维护侧栏、页签、固定头部、Logo、动态标题及版权等默认布局设置。
+
+## 单元测试
+
+项目使用 **Jest 29**、**Vue Test Utils 2** 和 **jsdom** 测试 Vue 3 页面。`@vue/vue3-jest` 转换 Vue 单文件组件，`ts-jest` 转换并检查测试中的 TypeScript。Jest 配置使用 `.cjs`，与项目的 ESM、Vite 构建配置独立，路径别名 `@` 同样指向 `src/`。
+
+```bash
+# 单次运行全部单元测试，适合本地验证和 CI
+pnpm test:unit
+
+# 开发时监听文件变化；按 a 运行全部用例，按 q 退出
+pnpm test:unit:watch
+
+# 只运行任务列表测试
+pnpm test:unit tests/unit/task-list.spec.ts
+
+# 运行测试并生成覆盖率报告
+pnpm test:unit:coverage
+```
+
+覆盖率报告输出到 `tests/unit/coverage/`，HTML 入口为 `tests/unit/coverage/lcov-report/index.html`，该目录已被 Git 忽略。当前覆盖率统计对象为 `src/views/task/list/index.vue`；增加其他模块测试时，可同步扩展 `jest.config.cjs` 中的 `collectCoverageFrom`。
+
+### 任务列表测试范围
+
+用例位于 `tests/unit/task-list.spec.ts`，通过挂载真实任务列表页面、点击按钮及触发组件事件验证业务行为：
+
+- 首次查询、负责人加载、分页、组合筛选、关键词空白处理、排序及重置。
+- 管理员、创建人、负责人及无关用户的操作权限；已完成任务隐藏编辑、指派和状态推进入口。
+- 新增、编辑、指派、详情入口及表单成功后的列表刷新。
+- 待办 → 进行中 → 已完成的状态提交、删除确认、取消确认、操作期间防止重复提交。
+- 列表和负责人请求失败、负责人重新展开时重试、写入失败后恢复操作。
+- 并发请求乱序返回时保留最新结果，以及删除末页最后一项后回到有效页。
+
+测试 Mock 任务 API、用户 Store、Element Plus 提示及表单/详情子组件，使用轻量 UI 替身保留插槽、`v-model` 和事件。测试不会连接真实后端，也不验证 Element Plus 自身、真实弹窗表单、浏览器布局或后端权限。
+
+### 新增测试
+
+1. 在 `tests/unit/` 下创建 `*.spec.ts` 文件，Jest 会自动发现。
+2. 使用 Vue Test Utils 挂载目标组件，Mock 网络请求和不属于当前测试范围的依赖。
+3. 优先通过输入、点击与事件断言页面行为、接口参数和可见结果，避免依赖组件私有状态。
+4. 使用 `flushPromises()` 等待异步查询完成，并在用例结束后卸载组件、清理 Mock。
+
+`tests/unit/setup.ts` 为任务列表使用的 Vue 自动导入函数提供运行时绑定，因为 Jest 不会执行 Vite 的自动导入插件。测试其他组件时，如使用了额外的自动导入 API，需补充相应绑定。测试独立配置 `tests/tsconfig.json` 保留严格类型检查，`tests/unit/vue.d.ts` 提供 Vue 文件声明。
+
+## 开发约定
+
+- 新接口写在 `src/api/`，请求与响应类型写在 `src/types/api/`；优先复用统一 Axios 实例和已有公共类型。
+- 开发页面前检查 `src/components/`，优先复用分页、表格工具、字典标签、上传等已有能力。
+- 使用 Element Plus 及项目既有 SCSS、主题变量，避免业务组件独立维护一套主色。
+- 页面组件名称、路由名称和缓存配置保持一致；后端菜单组件路径必须能匹配 `src/views/` 中的实际文件。
+- 对日期口径、状态编码、空值语义和权限规则添加必要注释，保持前后端契约一致。
