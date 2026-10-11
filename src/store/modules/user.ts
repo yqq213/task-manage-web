@@ -67,14 +67,16 @@ const useUserStore = defineStore(
             this.nickName = user.nickName || ''
             this.avatar = avatar
             cache.session.set('pwrChrtype', res.pwdChrtype)
+            // 仅超级管理员或 admin 角色展示密码提醒，普通用户登录不弹出提示。
+            const isAdmin = Number(this.id) === 1 || this.roles.includes('admin')
             /* 初始密码提示 */
-            if(res.isDefaultModifyPwd) {
+            if(isAdmin && res.isDefaultModifyPwd) {
               ElMessageBox.confirm('您的密码还是初始密码，请修改密码！',  '安全提示', {  confirmButtonText: '确定',  cancelButtonText: '取消',  type: 'warning' }).then(() => {
                 router.push({ name: 'Profile', params: { activeTab: 'resetPwd' } })
               }).catch(() => {})
             }
             /* 过期密码提示 */
-            if(!res.isDefaultModifyPwd && res.isPasswordExpired) {
+            if(isAdmin && !res.isDefaultModifyPwd && res.isPasswordExpired) {
               ElMessageBox.confirm('您的密码已过期，请尽快修改密码！',  '安全提示', {  confirmButtonText: '确定',  cancelButtonText: '取消',  type: 'warning' }).then(() => {
                 router.push({ name: 'Profile', params: { activeTab: 'resetPwd' } })
               }).catch(() => {})
