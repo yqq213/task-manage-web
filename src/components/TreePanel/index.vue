@@ -726,12 +726,13 @@ onBeforeUnmount(() => {
   }
 
   :deep(.el-tree-node.is-current > .el-tree-node__content) {
-    background: #e6f0fd;
-    color: #409eff;
+    // 选中项跟随主题切换；暗色模式使用浅色阶保持文字对比度。
+    background: var(--el-color-primary-light-9);
+    color: var(--workspace-accent, var(--el-color-primary));
     font-weight: 600;
 
     .node-icon {
-      color: #409eff !important;
+      color: var(--workspace-accent, var(--el-color-primary)) !important;
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" :title="titles[mode]" width="600px" append-to-body destroy-on-close :close-on-click-modal="false" :before-close="close" @closed="formRef?.clearValidate()">
+  <el-dialog v-model="visible" class="task-dialog" :title="titles[mode]" width="600px" append-to-body destroy-on-close :close-on-click-modal="false" :before-close="close" @closed="formRef?.clearValidate()">
     <div v-loading="loading" :aria-busy="loading">
       <el-alert v-if="error" :title="error" type="error" :closable="false" show-icon class="mb20" role="alert" />
       <el-form ref="formRef" :model="form" :rules="rules" label-width="90px" :disabled="loading || saving" @submit.prevent="submit">

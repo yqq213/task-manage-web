@@ -144,8 +144,9 @@ function isActive(r: any): boolean {
 function tagActiveStyle(tag: any): Record<string, string> {
   if (!isActive(tag) || tagsViewStyle.value !== 'card') return {}
   return {
-    "background-color": theme.value,
-    "border-color": theme.value
+    // 页签采用主题浅底，避免内联实色背景与共享文字样式叠加后失去对比度。
+    "background-color": 'var(--el-color-primary-light-9)',
+    "border-color": 'var(--el-color-primary-light-7)'
   }
 }
 

@@ -1,10 +1,10 @@
 <template>
-  <div class="app-container" :aria-busy="loading">
+  <div class="app-container dashboard-page" :aria-busy="loading">
     <!-- 日期选择与已查询范围独立保存，避免旧图表被误认为新范围的数据。 -->
     <el-card shadow="always" class="mb20">
       <el-row :gutter="20" align="middle">
         <el-col :xs="24" :md="9">
-          <h2 class="mt5 mb10">数据看板</h2>
+          <div class="workspace-heading dashboard-heading"><div><h1>数据看板</h1></div></div>
           <el-text type="info">看清任务分布，跟进我的完成情况</el-text>
         </el-col>
         <el-col :xs="24" :md="15">
@@ -41,7 +41,7 @@
         <el-row :gutter="20">
           <el-col :xs="12" :sm="6"><el-statistic title="任务总数" :value="stats.total" :value-style="{ fontWeight: 'bold' }" /></el-col>
           <el-col v-for="item in stats.statusDistribution" :key="item.code" :xs="12" :sm="6">
-            <el-statistic :title="item.name" :value="item.count" :value-style="{ color: `var(${statusColors[item.code]})`, fontWeight: 'bold' }" />
+            <el-statistic :title="item.name" :value="item.count" :value-style="{ color: item.code === 'IN_PROGRESS' ? 'var(--workspace-accent)' : `var(${statusColors[item.code]})`, fontWeight: 'bold' }" />
             <el-text size="small" type="info">占比 {{ item.percentage }}%</el-text>
           </el-col>
         </el-row>

@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="visible" title="任务详情" size="68%" append-to-body @closed="invalidate">
+  <el-drawer v-model="visible" class="task-detail-drawer" title="任务详情" size="68%" append-to-body @closed="invalidate">
     <div v-loading="loading" :aria-busy="loading">
       <el-alert v-if="error" :title="error" type="error" :closable="false" show-icon role="alert" />
       <template v-if="detail">

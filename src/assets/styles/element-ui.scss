@@ -1,5 +1,9 @@
 // cover some element-ui styles
 
+input {
+  outline: none !important;
+}
+
 .el-breadcrumb__inner,
 .el-breadcrumb__inner a {
   font-weight: 400 !important;

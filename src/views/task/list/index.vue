@@ -1,5 +1,10 @@
 <template>
   <div class="app-container">
+    <header class="workspace-heading">
+      <div><h1>任务列表</h1><p>明确负责人，跟进进度，让每项工作都有着落。</p></div>
+      <div class="task-flow" aria-label="任务状态按待办、进行中、已完成依次推进"><span>待办</span><i aria-hidden="true" /><span>进行中</span><i aria-hidden="true" /><span>已完成</span></div>
+    </header>
+    <section class="task-list-panel" aria-label="任务查询与列表">
     <!-- 组合筛选：点击搜索统一查询，筛选条件不直接触发请求。 -->
     <el-form v-show="showSearch" :model="query" inline label-width="68px" @submit.prevent="search">
       <el-form-item label="关键词">
@@ -65,6 +70,7 @@
     <!-- 子组件负责表单与详情，写入成功后由列表统一刷新数据。 -->
     <task-form ref="taskForm" @success="getList" />
     <task-detail ref="taskDetail" />
+    </section>
   </div>
 </template>
 

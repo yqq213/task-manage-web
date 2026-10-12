@@ -1,0 +1,177 @@
+/* 工作台视觉 Token 集中维护；组件主色继续由用户主题设置生成。 */
+:root {
+  --workspace-canvas: #f2f7f6;
+  --workspace-surface: #ffffff;
+  --workspace-ink: #173c3a;
+  --workspace-muted: #647c79;
+  --workspace-line: #dde9e6;
+  --workspace-night: #092b28;
+  --workspace-space: 24px;
+  --workspace-radius: 16px;
+  --workspace-radius-small: 8px;
+  --workspace-shadow: 0 8px 28px rgb(16 59 56 / 5%);
+  --workspace-display: 'Avenir Next', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --workspace-body: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --workspace-data: 'SFMono-Regular', Consolas, monospace;
+  --workspace-accent: var(--el-color-primary);
+  --menu-hover: #123b35;
+  --el-border-radius-base: var(--workspace-radius-small);
+  --el-border-radius-small: 6px;
+  --el-text-color-primary: var(--workspace-ink);
+  --el-text-color-regular: var(--workspace-muted);
+  --el-border-color: var(--workspace-line);
+  --el-border-color-light: var(--workspace-line);
+  --el-fill-color-light: var(--workspace-canvas);
+}
+
+html.dark {
+  --workspace-canvas: #091816;
+  --workspace-surface: #102420;
+  --workspace-ink: #e5f2ef;
+  --workspace-muted: #a4bab5;
+  --workspace-line: #243d36;
+  --workspace-shadow: 0 8px 28px rgb(0 0 0 / 15%);
+  --workspace-accent: var(--el-color-primary-light-3);
+  --el-bg-color: var(--workspace-canvas);
+  --el-bg-color-overlay: var(--workspace-surface);
+  --el-text-color-primary: var(--workspace-ink);
+  --el-text-color-regular: var(--workspace-muted);
+  --el-border-color: var(--workspace-line);
+  --el-border-color-light: var(--workspace-line);
+  --el-fill-color-blank: var(--workspace-surface);
+  --el-fill-color-light: var(--workspace-canvas);
+  --sidebar-bg: var(--workspace-night);
+  --navbar-bg: var(--workspace-surface);
+  --tags-bg: var(--workspace-surface);
+}
+// 深色背景上的文字使用主题浅色阶，保留实色按钮和图表的原有主色。
+html.dark #app .app-wrapper .el-button--primary.is-link {
+  --el-button-text-color: var(--workspace-accent);
+  --el-button-hover-text-color: var(--el-color-primary-light-5);
+}
+
+body { font-family: var(--workspace-body); background: var(--workspace-canvas); }
+
+/* 只调整共享展示层，不改导航高度，保留固定头部和页签的原有定位关系。 */
+#app .app-wrapper {
+  background: var(--workspace-canvas);
+
+  .navbar {
+    background: var(--workspace-surface);
+    border-bottom: 1px solid var(--workspace-line);
+    box-shadow: none;
+  }
+  .sidebar-container {
+    box-shadow: 4px 0 24px rgb(16 59 56 / 8%);
+    .sidebar-logo-container { border-bottom: 1px solid rgb(255 255 255 / 8%); }
+    .sidebar-title { font-family: var(--workspace-display); letter-spacing: 1px; }
+    .el-menu-item, .el-sub-menu__title {
+      transition: background-color .18s, color .18s;
+    }
+  }
+  .tags-view-container {
+    background: var(--workspace-surface);
+    border-bottom-color: var(--workspace-line);
+    &:not(.tags-view-container--chrome) .tags-view-item {
+      border-radius: var(--workspace-radius-small);
+      border-color: transparent;
+      background: var(--workspace-canvas);
+      color: var(--workspace-muted);
+      &.active {
+        background: var(--el-color-primary-light-9);
+        color: var(--workspace-accent);
+        border-color: var(--el-color-primary-light-7);
+        &::before { background: var(--workspace-accent); }
+      }
+    }
+  }
+  .app-container { padding: var(--workspace-space); }
+  .el-card {
+    --el-card-border-radius: var(--workspace-radius);
+    --el-card-border-color: var(--workspace-line);
+    --el-card-bg-color: var(--workspace-surface);
+    --el-box-shadow-light: var(--workspace-shadow);
+  }
+  .el-card__header { font-family: var(--workspace-display); }
+  .el-table {
+    --el-table-header-bg-color: var(--workspace-canvas);
+    --el-table-border-color: var(--workspace-line);
+    --el-table-row-hover-bg-color: var(--el-color-primary-light-9);
+    --el-table-bg-color: var(--workspace-surface);
+    --el-table-tr-bg-color: var(--workspace-surface);
+    border-radius: var(--workspace-radius-small);
+    th.el-table__cell { font-weight: 600; color: var(--workspace-muted); }
+    .el-table__cell { padding-block: 12px; }
+  }
+  .el-form-item__label { font-weight: 500; }
+  .el-statistic__number { font-family: var(--workspace-data); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .el-statistic__head { color: var(--workspace-muted); margin-bottom: 12px; }
+  .el-statistic__content { font-size: 30px; }
+}
+
+.workspace-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--workspace-space);
+  margin-bottom: var(--workspace-space);
+  h1, h2 { font-family: var(--workspace-display); color: var(--workspace-ink); font-size: 26px; margin: 0 0 8px; letter-spacing: -.5px; }
+  p { margin: 0; color: var(--workspace-muted); font-size: 14px; line-height: 1.7; }
+}
+.workspace-heading h1, .workspace-heading h2 { text-wrap: balance; }
+.task-flow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--workspace-muted);
+  font-size: 12px;
+  white-space: nowrap;
+  span { display: inline-flex; align-items: center; gap: 6px; }
+  span::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--el-color-warning); }
+  span:nth-of-type(2)::before { background: var(--el-color-primary); }
+  span:nth-of-type(3)::before { background: var(--el-color-success); }
+  i { width: 24px; height: 1px; background: var(--workspace-line); }
+}
+.task-list-panel {
+  padding: var(--workspace-space);
+  background: var(--workspace-surface);
+  border: 1px solid var(--workspace-line);
+  border-radius: var(--workspace-radius);
+  box-shadow: var(--workspace-shadow);
+  > .el-form { border-bottom: 1px solid var(--workspace-line); margin-bottom: var(--workspace-space); }
+  .pagination-container { background: transparent; }
+}
+.task-dialog .el-select, .task-dialog .el-date-editor.el-input { width: 100%; }
+.dashboard-page .dashboard-heading { margin: 0; }
+.dashboard-page .el-card__header strong { font-size: 16px; }
+
+/* Teleport 弹层在布局外，通过 Element Plus 公共变量统一视觉。 */
+.el-dialog, .el-drawer {
+  --el-dialog-border-radius: var(--workspace-radius);
+  --el-dialog-bg-color: var(--workspace-surface);
+  --el-drawer-bg-color: var(--workspace-surface);
+  --el-dialog-padding-primary: var(--workspace-space);
+  .el-dialog__title, .el-drawer__title { font-family: var(--workspace-display); font-weight: 600; }
+}
+.task-dialog { max-width: calc(100vw - var(--workspace-space)); }
+.task-detail-drawer {
+  max-width: 100vw;
+  .el-drawer__header { padding-bottom: var(--workspace-space); border-bottom: 1px solid var(--workspace-line); margin-bottom: 0; }
+  .el-descriptions { margin-bottom: var(--workspace-space); }
+  h3 { font-family: var(--workspace-display); font-size: 16px; margin-block: var(--workspace-space); }
+}
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--el-color-primary);
+  outline-offset: 3px;
+}
+@media (max-width: 767px) {
+  :root { --workspace-space: 16px; }
+  .workspace-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .task-detail-drawer { width: 100% !important; }
+  .task-list-panel > .el-form .el-form-item { display: flex; margin-right: 0; }
+  .task-list-panel > .el-form .el-form-item__content { min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #app .app-wrapper .el-menu-item, #app .app-wrapper .el-sub-menu__title { transition: none; }
+  .fade-transform-enter-active, .fade-transform-leave-active { transition: none !important; }
+}
