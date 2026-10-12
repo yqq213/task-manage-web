@@ -1,5 +1,10 @@
 <template>
    <div class="app-container">
+      <header class="workspace-heading">
+         <div><h1>菜单管理</h1><p>维护菜单层级与权限标识，组织系统的导航入口。</p></div>
+      </header>
+      <!-- 复用任务列表面板，保留菜单树形表格及原有操作。 -->
+      <section class="task-list-panel" aria-label="菜单查询与列表">
       <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
          <el-form-item label="菜单名称" prop="menuName">
             <el-input
@@ -99,6 +104,8 @@
             </template>
          </el-table-column>
       </el-table>
+
+      </section>
 
       <!-- 添加或修改菜单对话框 -->
       <el-dialog :title="title" v-model="open" width="680px" append-to-body>

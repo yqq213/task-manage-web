@@ -1,5 +1,10 @@
 <template>
    <div class="app-container">
+      <header class="workspace-heading">
+         <div><h1>角色管理</h1><p>配置角色权限与数据范围，明确各类用户的访问边界。</p></div>
+      </header>
+      <!-- 复用任务列表面板，筛选、工具栏、表格和分页保持统一层次。 -->
+      <section class="task-list-panel" aria-label="角色查询与列表">
       <el-form :model="queryParams" ref="queryRef" v-show="showSearch" :inline="true" label-width="68px">
          <el-form-item label="角色名称" prop="roleName">
             <el-input
@@ -138,6 +143,8 @@
          v-model:limit="queryParams.pageSize"
          @pagination="getList"
       />
+
+      </section>
 
       <!-- 添加或修改角色配置对话框 -->
       <el-dialog :title="title" v-model="open" width="500px" append-to-body>

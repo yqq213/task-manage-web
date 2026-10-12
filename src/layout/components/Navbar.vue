@@ -277,6 +277,11 @@ async function toggleTheme(event?: MouseEvent): Promise<void> {
         right: 8px;
         position: relative;
 
+        // 鼠标悬浮时隐藏触发区域的焦点框，保留键盘导航的焦点提示。
+        &:hover {
+          outline: none;
+        }
+
         .user-avatar {
           cursor: pointer;
           width: 30px;

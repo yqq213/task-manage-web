@@ -1,5 +1,10 @@
 <template>
    <div class="app-container">
+      <header class="workspace-heading">
+         <div><h1>字典管理</h1><p>维护业务字典与选项，统一系统中的数据含义。</p></div>
+      </header>
+      <!-- 复用任务列表面板，筛选、工具栏、表格和分页保持统一层次。 -->
+      <section class="task-list-panel" aria-label="字典查询与列表">
       <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
          <el-form-item label="字典名称" prop="dictName">
             <el-input
@@ -137,6 +142,8 @@
          v-model:limit="queryParams.pageSize"
          @pagination="getList"
       />
+
+      </section>
 
       <!-- 添加或修改参数配置对话框 -->
       <el-dialog :title="title" v-model="open" width="500px" append-to-body>

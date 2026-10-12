@@ -1,5 +1,10 @@
 <template>
    <div class="app-container">
+      <header class="workspace-heading">
+         <div><h1>部门管理</h1><p>维护组织层级与部门信息，让人员归属清晰有序。</p></div>
+      </header>
+      <!-- 复用任务列表面板，保留部门树形表格及原有操作。 -->
+      <section class="task-list-panel" aria-label="部门查询与列表">
       <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
          <el-form-item label="部门名称" prop="deptName">
             <el-input
@@ -88,6 +93,8 @@
             </template>
          </el-table-column>
       </el-table>
+
+      </section>
 
       <!-- 添加或修改部门对话框 -->
       <el-dialog :title="title" v-model="open" width="600px" append-to-body>

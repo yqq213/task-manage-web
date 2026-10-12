@@ -50,7 +50,8 @@
         </div>
       </el-card>
 
-      <el-row :gutter="20">
+      <!-- 同一行的卡片随较高内容拉伸；移动端换行后各自按内容撑开。 -->
+      <el-row :gutter="20" class="dashboard-distributions">
         <el-col :xs="24" :lg="14" class="mb20">
           <el-card shadow="always" v-loading="loading">
             <template #header><el-space direction="vertical" alignment="start"><strong>任务状态分布</strong><el-text size="small" type="info">从待办到完成，查看任务当前进度</el-text></el-space></template>

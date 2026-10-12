@@ -1,5 +1,10 @@
 <template>
    <div class="app-container">
+      <header class="workspace-heading">
+         <div><h1>操作日志</h1><p>查看系统操作与执行结果，追踪业务变更记录。</p></div>
+      </header>
+      <!-- 复用任务列表面板，日志详情仍由原有弹层展示。 -->
+      <section class="task-list-panel" aria-label="操作日志查询与列表">
       <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
          <el-form-item label="操作地址" prop="operIp">
             <el-input
@@ -147,6 +152,8 @@
          v-model:limit="queryParams.pageSize"
          @pagination="getList"
       />
+
+      </section>
 
       <operlog-detail v-model:visible="detailVisible" :row="detailRow" />
    </div>

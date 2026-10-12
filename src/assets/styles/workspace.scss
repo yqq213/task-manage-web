@@ -144,6 +144,11 @@ body { font-family: var(--workspace-body); background: var(--workspace-canvas); 
 .task-dialog .el-select, .task-dialog .el-date-editor.el-input { width: 100%; }
 .dashboard-page .dashboard-heading { margin: 0; }
 .dashboard-page .el-card__header strong { font-size: 16px; }
+// 使用行内拉伸实现等高，不给图表或空状态设定固定高度。
+.dashboard-distributions > .el-col {
+  display: flex;
+  > .el-card { width: 100%; min-width: 0; }
+}
 
 /* Teleport 弹层在布局外，通过 Element Plus 公共变量统一视觉。 */
 .el-dialog, .el-drawer {

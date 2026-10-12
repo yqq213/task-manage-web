@@ -37,7 +37,7 @@ export default {
   /**
    * 标签页样式：card 卡片、chrome 谷歌浏览器风格（默认）；已保存的个人设置优先
    */
-  tagsViewStyle: 'chrome',
+  tagsViewStyle: 'card',
 
   /**
    * 是否固定头部

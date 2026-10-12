@@ -1,8 +1,13 @@
 <template>
-  <div class="app-container tree-sidebar-manage-wrap">
+  <div class="app-container tree-sidebar-manage-wrap user-manage-page">
     <tree-panel title="组织机构" :tree-data="deptOptions" search-placeholder="请输入部门名称" storage-key="dept-sidebar-width" :defaultExpandAll="true" @node-click="handleNodeClick" @refresh="getDeptTree" ref="deptTreeRef" />
     <div class="tree-sidebar-content">
       <div class="content-inner">
+        <header class="workspace-heading">
+          <div><h1>用户管理</h1><p>维护用户信息与账号权限，按组织机构管理系统成员。</p></div>
+        </header>
+        <!-- 保留部门树筛选，右侧查询与列表复用任务列表的卡片样式。 -->
+        <section class="task-list-panel" aria-label="用户查询与列表">
         <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
           <el-form-item label="用户名称" prop="userName">
             <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable style="width: 240px" @keyup.enter="handleQuery" />
@@ -87,6 +92,7 @@
           </el-table-column>
         </el-table>
         <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+        </section>
       </div>
     </div>
     <!-- 添加或修改用户配置对话框 -->
@@ -460,3 +466,11 @@ onMounted(() => {
   })
 })
 </script>
+
+<style scoped lang="scss">
+/* 仅覆盖用户列表内容区，保留部门树的折叠、拖动与滚动布局。 */
+.user-manage-page .content-inner {
+  padding: var(--workspace-space);
+  background: var(--workspace-canvas);
+}
+</style>

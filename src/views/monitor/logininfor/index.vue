@@ -1,5 +1,10 @@
 <template>
    <div class="app-container">
+      <header class="workspace-heading">
+         <div><h1>登录日志</h1><p>查看账号登录结果与访问记录，定位登录异常。</p></div>
+      </header>
+      <!-- 复用任务列表面板，筛选、工具栏、表格和分页保持统一层次。 -->
+      <section class="task-list-panel" aria-label="登录日志查询与列表">
       <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
          <el-form-item label="登录地址" prop="ipaddr">
             <el-input
@@ -121,6 +126,7 @@
          v-model:limit="queryParams.pageSize"
          @pagination="getList"
       />
+      </section>
    </div>
 </template>
 
