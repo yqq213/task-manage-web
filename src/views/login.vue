@@ -1,12 +1,9 @@
 <template>
-  <div class="login">
-    <!-- 背景仅作装饰；CSS 动画不参与登录状态，并尊重减少动态效果设置。 -->
+  <div ref="loginRoot" class="login">
+    <!-- 背景仅作装饰；粒子与光晕不参与登录状态，并尊重减少动态效果设置。 -->
     <div class="login-atmosphere" :class="{ 'is-paused': backgroundPaused }" aria-hidden="true">
       <div class="login-glow login-glow-one" /><div class="login-glow login-glow-two" />
-      <svg class="login-network" viewBox="0 0 1200 800" fill="none" preserveAspectRatio="xMidYMid slice">
-        <path d="M0 570H210L390 390H670L850 210H1200M0 720H330L510 540H800L1010 330H1200M160 0V180L390 390M670 390V640L830 800" />
-        <g><circle cx="210" cy="570" r="5" /><circle cx="390" cy="390" r="7" /><circle cx="670" cy="390" r="5" /><circle cx="850" cy="210" r="7" /><circle cx="510" cy="540" r="5" /><circle cx="1010" cy="330" r="5" /></g>
-      </svg>
+      <particle-background class="login-particles" />
     </div>
     <section class="login-intro">
       <div class="login-brand"><span class="login-brand-mark" aria-hidden="true">✓</span>{{ title }}</div>
@@ -86,16 +83,44 @@ import Cookies from "js-cookie"
 import { encrypt, decrypt } from "@/utils/jsencrypt"
 import useUserStore from '@/store/modules/user'
 import defaultSettings from '@/settings'
+import ParticleBackground from '@/components/ParticleBackground/index.vue'
+import { gsap } from 'gsap'
 import type { CaptchaInfoResult } from '@/types/api/login'
 import type { LoginForm } from '@/types/api/login'
 
 const title = import.meta.env.VITE_APP_TITLE
 const footerContent = defaultSettings.footerContent
+const loginRoot = ref<HTMLDivElement>()
+let entranceContext: gsap.Context | undefined
+let motionPreference: MediaQueryList | undefined
+/** 恢复原始样式并释放整组动画，避免 from() 的内部起始状态残留。 */
+function clearEntrance(): void { entranceContext?.revert(); entranceContext = undefined }
+function syncMotionPreference(): void { if (motionPreference?.matches) clearEntrance() }
 // 标签页不可见时暂停装饰动画，离开登录页时移除监听。
 const backgroundPaused = ref(document.hidden)
-function syncBackgroundVisibility(): void { backgroundPaused.value = document.hidden }
-onMounted(() => { document.addEventListener('visibilitychange', syncBackgroundVisibility) })
-onBeforeUnmount(() => { document.removeEventListener('visibilitychange', syncBackgroundVisibility) })
+function syncBackgroundVisibility(): void {
+  backgroundPaused.value = document.hidden
+  if (document.hidden) clearEntrance()
+}
+onMounted(() => {
+  document.addEventListener('visibilitychange', syncBackgroundVisibility)
+  motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
+  motionPreference.addEventListener('change', syncMotionPreference)
+  if (motionPreference.matches || document.hidden || !loginRoot.value) return
+  // 仅在本次挂载时播放；输入、验证码更新及登录结果不触发重播。
+  entranceContext = gsap.context(() => {
+    gsap.timeline({ defaults: { duration: 0.4, ease: 'power2.out', clearProps: 'opacity,visibility,transform' } })
+      .from('.login-brand, .login-intro h1, .login-intro > p', { autoAlpha: 0, y: 16, stagger: 0.07 }, 0)
+      .from('.login-form', { autoAlpha: 0, y: 16 }, 0.15)
+      .from('.login-form-heading, .login-form > .el-form-item, .login-form > .el-checkbox', { autoAlpha: 0, y: 12, duration: 0.32, stagger: 0.06 }, 0.28)
+      .from('.el-login-footer', { autoAlpha: 0, duration: 0.3 }, 0.75)
+  }, loginRoot.value)
+})
+onBeforeUnmount(() => {
+  clearEntrance()
+  motionPreference?.removeEventListener('change', syncMotionPreference)
+  document.removeEventListener('visibilitychange', syncBackgroundVisibility)
+})
 const userStore = useUserStore()
 const route = useRoute()
 const router = useRouter()
@@ -212,7 +237,7 @@ getCookie()
   color: var(--workspace-ink);
 }
 .login-atmosphere { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-.login-atmosphere.is-paused .login-glow, .login-atmosphere.is-paused circle { animation-play-state: paused; }
+.login-atmosphere.is-paused .login-glow { animation-play-state: paused; }
 .login-glow {
   position: absolute;
   width: 70vw;
@@ -223,11 +248,7 @@ getCookie()
 }
 .login-glow-one { top: -50%; left: -20%; }
 .login-glow-two { bottom: -70%; right: -20%; animation-delay: -12s; }
-.login-network {
-  width: 100%; height: 100%; opacity: .18;
-  path { stroke: var(--login-light); stroke-width: 1; }
-  circle { fill: var(--login-light); animation: login-pulse 8s ease-in-out infinite alternate; }
-}
+.login-particles { position: absolute; inset: 0; width: 100%; height: 100%; }
 .login-intro { max-width: 560px; color: var(--login-light); }
 .login-brand { display: flex; align-items: center; gap: 12px; font-family: var(--workspace-display); font-size: 18px; font-weight: 600; }
 .login-brand-mark {
@@ -304,7 +325,6 @@ getCookie()
   from { transform: translate3d(0, 0, 0) scale(1); }
   to { transform: translate3d(10%, 8%, 0) scale(1.08); }
 }
-@keyframes login-pulse { from { opacity: .3; } to { opacity: 1; } }
 @media (max-width: 900px) {
   .login { flex-direction: column; justify-content: center; gap: 24px; }
   .login-intro { width: 420px; max-width: 100%; }
@@ -313,6 +333,6 @@ getCookie()
   .login-form { padding: var(--login-space) var(--workspace-space) 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .login-glow, .login-network circle { animation: none; }
+  .login-glow { animation: none; }
 }
 </style>

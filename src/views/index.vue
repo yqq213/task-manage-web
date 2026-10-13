@@ -1,7 +1,7 @@
 <template>
-  <div class="app-container dashboard-page" :aria-busy="loading">
+  <div ref="dashboardRoot" class="app-container dashboard-page" :aria-busy="loading">
     <!-- 日期选择与已查询范围独立保存，避免旧图表被误认为新范围的数据。 -->
-    <el-card shadow="always" class="mb20">
+    <el-card shadow="always" class="mb20 dashboard-filter">
       <el-row :gutter="20" align="middle">
         <el-col :xs="24" :md="9">
           <div class="workspace-heading dashboard-heading"><div><h1>数据看板</h1></div></div>
@@ -40,14 +40,14 @@
       <div class="dashboard-metrics" v-loading="loading">
         <article class="dashboard-metric is-total">
           <p class="dashboard-metric__label">任务总数</p>
-          <p class="dashboard-metric__value">{{ stats.total.toLocaleString('zh-CN') }}</p>
+          <p class="dashboard-metric__value">{{ displayed!.total.toLocaleString('zh-CN') }}</p>
         </article>
-        <article v-for="item in stats.statusDistribution" :key="item.code" class="dashboard-metric" :class="`is-${statusTones[item.code]}`">
+        <article v-for="item in displayed!.statusDistribution" :key="item.code" class="dashboard-metric" :class="`is-${statusTones[item.code]}`">
           <p class="dashboard-metric__label">{{ item.name }}</p>
           <p class="dashboard-metric__value">{{ item.count.toLocaleString('zh-CN') }}</p>
           <p class="dashboard-metric__share">占比 {{ item.percentage }}%</p>
           <div class="dashboard-metric__bar-spacer" aria-hidden="true">
-            <div class="dashboard-metric__bar"><span :style="{ width: `${item.percentage}%` }" /></div>
+            <div class="dashboard-metric__bar"><span :style="{ width: '100%', transformOrigin: 'left', transform: `scaleX(${item.percentage / 100})` }" /></div>
           </div>
         </article>
       </div>
@@ -76,7 +76,7 @@
         </el-col>
       </el-row>
 
-      <el-card shadow="always" v-loading="loading">
+      <el-card shadow="always" v-loading="loading" class="dashboard-personal-card">
         <template #header><el-space wrap><strong>我的任务完成情况</strong><el-tag type="info" effect="plain">我负责的任务</el-tag></el-space></template>
         <div class="dashboard-personal">
           <article class="dashboard-metric is-done dashboard-personal__rate">
@@ -89,10 +89,10 @@
                   </linearGradient>
                 </defs>
                 <circle class="dashboard-ring__track" cx="80" cy="80" r="68" fill="none" stroke-width="14" />
-                <circle class="dashboard-ring__arc" :class="{ 'is-empty': stats.personalCompletionRate <= 0 }" cx="80" cy="80" r="68" fill="none" stroke-width="14" stroke-linecap="round" :stroke-dasharray="ringLength" :stroke-dashoffset="ringOffset" transform="rotate(-90 80 80)" />
+                <circle class="dashboard-ring__arc" :class="{ 'is-empty': displayed!.personalCompletionRate <= 0 }" style="transition: none" cx="80" cy="80" r="68" fill="none" stroke-width="14" stroke-linecap="round" :stroke-dasharray="ringLength" :stroke-dashoffset="ringOffset" transform="rotate(-90 80 80)" />
               </svg>
               <div class="dashboard-ring__caption">
-                <strong>{{ stats.personalCompletionRate }}%</strong>
+                <strong>{{ displayed!.personalCompletionRate }}%</strong>
                 <span>完成率</span>
               </div>
             </div>
@@ -100,15 +100,15 @@
           <div class="dashboard-personal__stats">
             <article class="dashboard-metric is-total">
               <p class="dashboard-metric__label">负责总数</p>
-              <p class="dashboard-metric__value">{{ stats.personalTotal.toLocaleString('zh-CN') }}</p>
+              <p class="dashboard-metric__value">{{ displayed!.personalTotal.toLocaleString('zh-CN') }}</p>
             </article>
             <article class="dashboard-metric is-done">
               <p class="dashboard-metric__label">已完成</p>
-              <p class="dashboard-metric__value">{{ stats.personalCompleted.toLocaleString('zh-CN') }}</p>
+              <p class="dashboard-metric__value">{{ displayed!.personalCompleted.toLocaleString('zh-CN') }}</p>
             </article>
             <article class="dashboard-metric is-total">
               <p class="dashboard-metric__label">未完成</p>
-              <p class="dashboard-metric__value">{{ (stats.personalTotal - stats.personalCompleted).toLocaleString('zh-CN') }}</p>
+              <p class="dashboard-metric__value">{{ (displayed!.personalTotal - displayed!.personalCompleted).toLocaleString('zh-CN') }}</p>
             </article>
           </div>
           <p class="dashboard-personal__note">{{ stats.personalTotal ? `已完成 ${stats.personalCompleted} / ${stats.personalTotal} 项负责的任务` : '当前日期范围内没有我负责的任务' }}。个人完成率按已完成数 ÷ 负责总数计算。</p>
@@ -123,6 +123,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { getTaskStats } from '@/api/task'
 import type { TaskStats, TaskStatus, TaskPriority } from '@/types/api/task'
 import DistributionChart from './dashboard/DistributionChart.vue'
+import { useDashboardMotion } from './dashboard/useDashboardMotion'
 
 type Preset = 'week' | 'month' | 'currentMonth' | 'all'
 const presets: { key: Preset; label: string }[] = [
@@ -137,6 +138,8 @@ const priorityColors: Record<TaskPriority, string> = { HIGH: '--dashboard-priori
 const dateRange = ref<[string, string] | null>(null)
 const applied = ref<[string, string] | null>(null)
 const stats = ref<TaskStats>()
+const dashboardRoot = ref<HTMLDivElement>()
+const displayed = useDashboardMotion(dashboardRoot, stats)
 const loading = ref(false)
 const error = ref('')
 let requestId = 0
@@ -158,7 +161,7 @@ const appliedRange = computed(() => applied.value ? `${applied.value[0]} 至 ${a
 const statusItems = computed(() => stats.value?.statusDistribution.map(item => ({ ...item, color: statusColors[item.code] })) || [])
 const priorityItems = computed(() => stats.value?.priorityDistribution.map(item => ({ ...item, color: priorityColors[item.code] })) || [])
 const ringOffset = computed(() => {
-  const rate = Math.min(Math.max(stats.value?.personalCompletionRate ?? 0, 0), 100)
+  const rate = Math.min(Math.max(displayed.value?.personalCompletionRate ?? 0, 0), 100)
   return ringLength * (1 - rate / 100)
 })
 function chartDescription(items: { name: string; count: number; percentage: number }[]): string {

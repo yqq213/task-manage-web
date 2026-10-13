@@ -82,4 +82,5 @@ app.use(ElementPlus, {
   size: Cookies.get('size') || 'default'
 })
 
-app.mount('#app')
+// 首个异步路由就绪后再替换静态加载画面，避免登录页资源加载期间出现空白首屏。
+void router.isReady().then(() => { app.mount('#app') })

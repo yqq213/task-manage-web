@@ -27,6 +27,13 @@ const stubs: Record<string, Component> = {
 }
 const statsMock = jest.mocked(getTaskStats)
 
+// jsdom 不提供 matchMedia；默认使用减少动态效果，验证最终业务内容。
+beforeAll(() => {
+  Object.defineProperty(window, 'matchMedia', { configurable: true, value: jest.fn(() => ({
+    matches: true, addEventListener: jest.fn(), removeEventListener: jest.fn()
+  })) })
+})
+
 function sample(): TaskStats {
   return {
     scope: 'ALL',

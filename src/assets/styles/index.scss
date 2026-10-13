@@ -178,3 +178,7 @@ aside {
     margin-bottom: 10px;
   }
 }
+
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: none;
+}

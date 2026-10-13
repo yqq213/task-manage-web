@@ -18,6 +18,7 @@ const container = ref<HTMLDivElement>()
 let chart: ECharts | undefined
 let observer: ResizeObserver | undefined
 let themeObserver: MutationObserver | undefined
+let motion: MediaQueryList | undefined
 // keep-alive 离开页面时不会卸载，禁止从脱离文档的容器读取主题并重绘。
 let active = true
 
@@ -55,7 +56,7 @@ function render(): void {
   const muted = color('--workspace-muted') || textColor
   const fills = props.items.map(item => paint(styles, rootStyles, item.color))
   const option: EChartsCoreOption = {
-    animation: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    animation: !motion?.matches,
     textStyle: { color: textColor, fontFamily: styles.fontFamily },
     tooltip: { trigger: 'item', confine: true },
     ...(props.kind === 'bar' ? {
@@ -113,6 +114,9 @@ watch(() => props.items, render, { deep: true })
 onMounted(() => {
   if (!container.value) return
   chart = init(container.value)
+  // 系统偏好在页面打开期间变化时，同步停用或恢复图表自身动画。
+  motion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  motion.addEventListener('change', render)
   observer = new ResizeObserver(() => {
     if (active && container.value?.isConnected) chart?.resize()
   })
@@ -130,5 +134,8 @@ onActivated(async () => {
   chart?.resize()
 })
 onDeactivated(() => { active = false })
-onBeforeUnmount(() => { observer?.disconnect(); themeObserver?.disconnect(); chart?.dispose() })
+onBeforeUnmount(() => {
+  observer?.disconnect(); themeObserver?.disconnect(); chart?.dispose()
+  motion?.removeEventListener('change', render)
+})
 </script>

@@ -272,15 +272,17 @@ async function toggleTheme(event?: MouseEvent): Promise<void> {
       margin-right: 0px;
       padding-right: 0px;
 
+      // tabindex 在下拉根节点上，鼠标悬浮会聚焦并套上全局焦点框。
+      &:hover,
+      &:hover:focus,
+      &:hover:focus-visible {
+        outline: none;
+      }
+
       .avatar-wrapper {
         margin-top: 10px;
         right: 8px;
         position: relative;
-
-        // 鼠标悬浮时隐藏触发区域的焦点框，保留键盘导航的焦点提示。
-        &:hover {
-          outline: none;
-        }
 
         .user-avatar {
           cursor: pointer;
