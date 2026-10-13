@@ -102,6 +102,12 @@ body { font-family: var(--workspace-body); background: var(--workspace-canvas); 
     border-radius: var(--workspace-radius-small);
     th.el-table__cell { font-weight: 600; color: var(--workspace-muted); }
     .el-table__cell { padding-block: 12px; }
+    // hover-row 异步更新时可能残留；移开鼠标后按行类型恢复底色，固定列同步生效。
+    .el-table__body tr.hover-row:not(:hover) {
+      --el-table-row-hover-bg-color: var(--el-table-tr-bg-color);
+      &.el-table__row--striped { --el-table-row-hover-bg-color: var(--el-fill-color-lighter); }
+      &.current-row { --el-table-row-hover-bg-color: var(--el-table-current-row-bg-color); }
+    }
   }
   .el-form-item__label { font-weight: 500; }
   .el-statistic__number { font-family: var(--workspace-data); font-weight: 600; font-variant-numeric: tabular-nums; }
