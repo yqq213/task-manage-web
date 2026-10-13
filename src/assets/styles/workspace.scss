@@ -14,6 +14,20 @@
   --workspace-body: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --workspace-data: 'SFMono-Regular', Consolas, monospace;
   --workspace-accent: var(--el-color-primary);
+  /* 看板业务色与用户主题主色解耦；-soft 供柱/环渐变起点。 */
+  --dashboard-todo: #f5a623;
+  --dashboard-todo-soft: #f8c570;
+  --dashboard-progress: #009688;
+  --dashboard-progress-soft: #59bbb2;
+  --dashboard-done: #4caf50;
+  --dashboard-done-soft: #8bcb8d;
+  --dashboard-priority-high: #e4564a;
+  --dashboard-priority-high-soft: #ed9189;
+  --dashboard-priority-medium: #3b82f6;
+  --dashboard-priority-medium-soft: #80aef9;
+  --dashboard-priority-low: #8a9aa8;
+  --dashboard-priority-low-soft: #b3bdc6;
+  --dashboard-metric-shadow-hover: 0 12px 32px rgb(16 59 56 / 10%);
   --menu-hover: #123b35;
   --el-border-radius-base: var(--workspace-radius-small);
   --el-border-radius-small: 6px;
@@ -32,6 +46,7 @@ html.dark {
   --workspace-line: #243d36;
   --workspace-shadow: 0 8px 28px rgb(0 0 0 / 15%);
   --workspace-accent: var(--el-color-primary-light-3);
+  --dashboard-metric-shadow-hover: 0 12px 32px rgb(0 0 0 / 28%);
   --el-bg-color: var(--workspace-canvas);
   --el-bg-color-overlay: var(--workspace-surface);
   --el-text-color-primary: var(--workspace-ink);
@@ -155,6 +170,187 @@ body { font-family: var(--workspace-body); background: var(--workspace-canvas); 
   display: flex;
   > .el-card { width: 100%; min-width: 0; }
 }
+.dashboard-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.dashboard-metric {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 148px;
+  padding: 20px 20px 18px;
+  border: 1px solid var(--workspace-line);
+  border-radius: var(--workspace-radius);
+  box-shadow: var(--workspace-shadow);
+  background: color-mix(in srgb, var(--workspace-ink) 4%, var(--workspace-surface));
+}
+.dashboard-metric.is-todo {
+  --metric-accent: var(--dashboard-todo);
+  --metric-accent-soft: var(--dashboard-todo-soft);
+  background: color-mix(in srgb, var(--dashboard-todo) 11%, var(--workspace-surface));
+}
+.dashboard-metric.is-progress {
+  --metric-accent: var(--dashboard-progress);
+  --metric-accent-soft: var(--dashboard-progress-soft);
+  background: color-mix(in srgb, var(--dashboard-progress) 11%, var(--workspace-surface));
+}
+.dashboard-metric.is-done {
+  --metric-accent: var(--dashboard-done);
+  --metric-accent-soft: var(--dashboard-done-soft);
+  background: color-mix(in srgb, var(--dashboard-done) 11%, var(--workspace-surface));
+}
+.dashboard-metric__label {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--workspace-muted);
+}
+.dashboard-metric__value {
+  margin: 10px 0 0;
+  font-family: var(--workspace-data);
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -.5px;
+  line-height: 1.1;
+  color: var(--metric-accent, var(--workspace-ink));
+  font-variant-numeric: tabular-nums;
+}
+.dashboard-metric__share {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--workspace-muted);
+}
+.dashboard-metric__bar-spacer { margin-top: auto; padding-top: 16px; }
+.dashboard-metric__bar {
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--metric-accent) 18%, var(--workspace-surface));
+  overflow: hidden;
+}
+.dashboard-metric__bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--metric-accent-soft), var(--metric-accent));
+}
+.dashboard-personal {
+  display: grid;
+  grid-template-columns: minmax(220px, 34%) minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+.dashboard-personal__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.dashboard-personal__rate {
+  align-items: center;
+  justify-content: center;
+  min-height: 196px;
+}
+.dashboard-personal .dashboard-metric {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.dashboard-priority-legend {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.dashboard-priority-legend__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  text-align: center;
+}
+.dashboard-priority-legend__name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--workspace-ink);
+}
+.dashboard-priority-legend__swatch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--legend-accent);
+  flex-shrink: 0;
+}
+.dashboard-priority-legend__meta {
+  font-size: 12px;
+  color: var(--workspace-muted);
+}
+.dashboard-personal__note {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--workspace-muted);
+}
+.dashboard-ring-wrap {
+  position: relative;
+  width: min(176px, 100%);
+  aspect-ratio: 1;
+}
+.dashboard-ring { display: block; width: 100%; height: 100%; }
+.dashboard-ring__track { stroke: color-mix(in srgb, var(--dashboard-done) 18%, var(--workspace-surface)); }
+.dashboard-ring__arc {
+  stroke: url(#dashboardCompletionGrad);
+  transition: stroke-dashoffset .4s ease;
+}
+.dashboard-ring__arc.is-empty { opacity: 0; }
+.dashboard-ring__caption {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.dashboard-ring__caption strong {
+  font-family: var(--workspace-data);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--workspace-ink);
+  font-variant-numeric: tabular-nums;
+}
+.dashboard-ring__caption span {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--workspace-muted);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .dashboard-metric {
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .dashboard-metric:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--dashboard-metric-shadow-hover);
+  }
+}
+@media (max-width: 1199px) {
+  .dashboard-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 991px) {
+  .dashboard-personal { grid-template-columns: 1fr; }
+  .dashboard-personal__rate { min-height: 180px; }
+}
 
 /* Teleport 弹层在布局外，通过 Element Plus 公共变量统一视觉。 */
 .el-dialog, .el-drawer {
@@ -181,8 +377,12 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   .task-detail-drawer { width: 100% !important; }
   .task-list-panel > .el-form .el-form-item { display: flex; margin-right: 0; }
   .task-list-panel > .el-form .el-form-item__content { min-width: 0; }
+  .dashboard-metric { min-height: 132px; padding: 16px; }
+  .dashboard-metric__value { font-size: 28px; }
+  .dashboard-ring__caption strong { font-size: 28px; }
 }
 @media (prefers-reduced-motion: reduce) {
   #app .app-wrapper .el-menu-item, #app .app-wrapper .el-sub-menu__title { transition: none; }
   .fade-transform-enter-active, .fade-transform-leave-active { transition: none !important; }
+  .dashboard-ring__arc { transition: none; }
 }

@@ -36,19 +36,21 @@
         <el-tag v-if="pending" type="warning" effect="plain">日期已调整，点击查询更新</el-tag>
       </el-space>
 
-      <!-- 总量和三个状态组成连续进度带，状态顺序与业务流转一致。 -->
-      <el-card shadow="always" class="mb20" v-loading="loading">
-        <el-row :gutter="20">
-          <el-col :xs="12" :sm="6"><el-statistic title="任务总数" :value="stats.total" :value-style="{ fontWeight: 'bold' }" /></el-col>
-          <el-col v-for="item in stats.statusDistribution" :key="item.code" :xs="12" :sm="6">
-            <el-statistic :title="item.name" :value="item.count" :value-style="{ color: item.code === 'IN_PROGRESS' ? 'var(--workspace-accent)' : `var(${statusColors[item.code]})`, fontWeight: 'bold' }" />
-            <el-text size="small" type="info">占比 {{ item.percentage }}%</el-text>
-          </el-col>
-        </el-row>
-        <div v-if="stats.total" class="mt20" aria-hidden="true" :style="{ display: 'flex', height: 'var(--el-font-size-extra-small)', borderRadius: 'var(--el-border-radius-base)', overflow: 'hidden' }">
-          <div v-for="item in stats.statusDistribution" :key="item.code" :style="{ flex: item.count, backgroundColor: `var(${statusColors[item.code]})` }" />
-        </div>
-      </el-card>
+      <!-- 总数中性卡 + 三个状态独立卡；状态顺序与业务流转一致。 -->
+      <div class="dashboard-metrics" v-loading="loading">
+        <article class="dashboard-metric is-total">
+          <p class="dashboard-metric__label">任务总数</p>
+          <p class="dashboard-metric__value">{{ stats.total.toLocaleString('zh-CN') }}</p>
+        </article>
+        <article v-for="item in stats.statusDistribution" :key="item.code" class="dashboard-metric" :class="`is-${statusTones[item.code]}`">
+          <p class="dashboard-metric__label">{{ item.name }}</p>
+          <p class="dashboard-metric__value">{{ item.count.toLocaleString('zh-CN') }}</p>
+          <p class="dashboard-metric__share">占比 {{ item.percentage }}%</p>
+          <div class="dashboard-metric__bar-spacer" aria-hidden="true">
+            <div class="dashboard-metric__bar"><span :style="{ width: `${item.percentage}%` }" /></div>
+          </div>
+        </article>
+      </div>
 
       <!-- 同一行的卡片随较高内容拉伸；移动端换行后各自按内容撑开。 -->
       <el-row :gutter="20" class="dashboard-distributions">
@@ -64,33 +66,53 @@
             <template #header><el-space direction="vertical" alignment="start"><strong>优先级分布</strong><el-text size="small" type="info">查看任务轻重缓急与数量占比</el-text></el-space></template>
             <distribution-chart v-if="stats.total" kind="pie" :items="priorityItems" :description="chartDescription(priorityItems)" />
             <el-empty v-else description="当前日期范围内暂无任务，可扩大范围后查询" />
-            <el-row v-if="stats.total" :gutter="10">
-              <el-col v-for="item in stats.priorityDistribution" :key="item.code" :span="8">
-                <el-tag :type="priorityTags[item.code]" effect="plain">{{ item.name }}优先级</el-tag>
-                <p class="mb5">{{ item.count }} 项 · {{ item.percentage }}%</p>
-              </el-col>
-            </el-row>
+            <ul v-if="stats.total" class="dashboard-priority-legend">
+              <li v-for="item in priorityItems" :key="item.code" class="dashboard-priority-legend__item" :style="{ '--legend-accent': `var(${item.color})` }">
+                <span class="dashboard-priority-legend__name"><i class="dashboard-priority-legend__swatch" aria-hidden="true" />{{ item.name }}优先级</span>
+                <span class="dashboard-priority-legend__meta">{{ item.count }} 项 · {{ item.percentage }}%</span>
+              </li>
+            </ul>
           </el-card>
         </el-col>
       </el-row>
 
       <el-card shadow="always" v-loading="loading">
         <template #header><el-space wrap><strong>我的任务完成情况</strong><el-tag type="info" effect="plain">我负责的任务</el-tag></el-space></template>
-        <el-row :gutter="20" align="middle">
-          <el-col :xs="24" :sm="6">
-            <el-progress type="dashboard" :percentage="stats.personalCompletionRate" :color="'var(--el-color-success)'">
-              <el-statistic title="个人完成率" :value="stats.personalCompletionRate" suffix="%" />
-            </el-progress>
-          </el-col>
-          <el-col :xs="24" :sm="18">
-            <el-row :gutter="20">
-              <el-col :span="8"><el-statistic title="负责总数" :value="stats.personalTotal" /></el-col>
-              <el-col :span="8"><el-statistic title="已完成" :value="stats.personalCompleted" /></el-col>
-              <el-col :span="8"><el-statistic title="未完成" :value="stats.personalTotal - stats.personalCompleted" /></el-col>
-            </el-row>
-            <p><el-text type="info">{{ stats.personalTotal ? `已完成 ${stats.personalCompleted} / ${stats.personalTotal} 项负责的任务` : '当前日期范围内没有我负责的任务' }}。个人完成率按已完成数 ÷ 负责总数计算。</el-text></p>
-          </el-col>
-        </el-row>
+        <div class="dashboard-personal">
+          <article class="dashboard-metric is-done dashboard-personal__rate">
+            <div class="dashboard-ring-wrap" role="img" :aria-label="`个人完成率 ${stats.personalCompletionRate}%`">
+              <svg class="dashboard-ring" viewBox="0 0 160 160" aria-hidden="true">
+                <defs>
+                  <linearGradient id="dashboardCompletionGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="var(--dashboard-done-soft)" />
+                    <stop offset="100%" stop-color="var(--dashboard-done)" />
+                  </linearGradient>
+                </defs>
+                <circle class="dashboard-ring__track" cx="80" cy="80" r="68" fill="none" stroke-width="14" />
+                <circle class="dashboard-ring__arc" :class="{ 'is-empty': stats.personalCompletionRate <= 0 }" cx="80" cy="80" r="68" fill="none" stroke-width="14" stroke-linecap="round" :stroke-dasharray="ringLength" :stroke-dashoffset="ringOffset" transform="rotate(-90 80 80)" />
+              </svg>
+              <div class="dashboard-ring__caption">
+                <strong>{{ stats.personalCompletionRate }}%</strong>
+                <span>完成率</span>
+              </div>
+            </div>
+          </article>
+          <div class="dashboard-personal__stats">
+            <article class="dashboard-metric is-total">
+              <p class="dashboard-metric__label">负责总数</p>
+              <p class="dashboard-metric__value">{{ stats.personalTotal.toLocaleString('zh-CN') }}</p>
+            </article>
+            <article class="dashboard-metric is-done">
+              <p class="dashboard-metric__label">已完成</p>
+              <p class="dashboard-metric__value">{{ stats.personalCompleted.toLocaleString('zh-CN') }}</p>
+            </article>
+            <article class="dashboard-metric is-total">
+              <p class="dashboard-metric__label">未完成</p>
+              <p class="dashboard-metric__value">{{ (stats.personalTotal - stats.personalCompleted).toLocaleString('zh-CN') }}</p>
+            </article>
+          </div>
+          <p class="dashboard-personal__note">{{ stats.personalTotal ? `已完成 ${stats.personalCompleted} / ${stats.personalTotal} 项负责的任务` : '当前日期范围内没有我负责的任务' }}。个人完成率按已完成数 ÷ 负责总数计算。</p>
+        </div>
       </el-card>
     </template>
   </div>
@@ -107,9 +129,11 @@ const presets: { key: Preset; label: string }[] = [
   { key: 'week', label: '近 7 天' }, { key: 'month', label: '近 30 天' },
   { key: 'currentMonth', label: '本月' }, { key: 'all', label: '全部' }
 ]
-const statusColors: Record<TaskStatus, string> = { TODO: '--el-color-warning', IN_PROGRESS: '--el-color-primary', DONE: '--el-color-success' }
-const priorityColors: Record<TaskPriority, string> = { HIGH: '--el-color-danger', MEDIUM: '--el-color-warning', LOW: '--el-color-info' }
-const priorityTags: Record<TaskPriority, 'danger' | 'warning' | 'info'> = { HIGH: 'danger', MEDIUM: 'warning', LOW: 'info' }
+const RING_RADIUS = 68
+const ringLength = 2 * Math.PI * RING_RADIUS
+const statusTones: Record<TaskStatus, 'todo' | 'progress' | 'done'> = { TODO: 'todo', IN_PROGRESS: 'progress', DONE: 'done' }
+const statusColors: Record<TaskStatus, string> = { TODO: '--dashboard-todo', IN_PROGRESS: '--dashboard-progress', DONE: '--dashboard-done' }
+const priorityColors: Record<TaskPriority, string> = { HIGH: '--dashboard-priority-high', MEDIUM: '--dashboard-priority-medium', LOW: '--dashboard-priority-low' }
 const dateRange = ref<[string, string] | null>(null)
 const applied = ref<[string, string] | null>(null)
 const stats = ref<TaskStats>()
@@ -133,11 +157,18 @@ const pending = computed(() => JSON.stringify(dateRange.value) !== JSON.stringif
 const appliedRange = computed(() => applied.value ? `${applied.value[0]} 至 ${applied.value[1]}` : '全部时间')
 const statusItems = computed(() => stats.value?.statusDistribution.map(item => ({ ...item, color: statusColors[item.code] })) || [])
 const priorityItems = computed(() => stats.value?.priorityDistribution.map(item => ({ ...item, color: priorityColors[item.code] })) || [])
+const ringOffset = computed(() => {
+  const rate = Math.min(Math.max(stats.value?.personalCompletionRate ?? 0, 0), 100)
+  return ringLength * (1 - rate / 100)
+})
 function chartDescription(items: { name: string; count: number; percentage: number }[]): string {
   return items.map(item => `${item.name} ${item.count} 项，占比 ${item.percentage}%`).join('；')
 }
-function selectPreset(key: Preset): void { dateRange.value = presetRange(key) }
-function reset(): void { selectPreset('month'); void queryStats() }
+function selectPreset(key: Preset): void {
+  dateRange.value = presetRange(key)
+  void queryStats()
+}
+function reset(): void { selectPreset('month') }
 
 /** 成功后才更新范围标签；失败保留原图表，并明确提示查询失败。 */
 async function queryStats(): Promise<void> {
@@ -157,7 +188,7 @@ async function queryStats(): Promise<void> {
     if (current === requestId) loading.value = false
   }
 }
-selectPreset('month')
+dateRange.value = presetRange('month')
 onMounted(() => { void queryStats() })
 onBeforeUnmount(() => { ++requestId })
 </script>
